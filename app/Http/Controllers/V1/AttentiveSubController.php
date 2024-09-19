@@ -19,9 +19,8 @@ class AttentiveSubController extends Controller
      * */
     public function __invoke(Request $request): Response{
 
-        $shop = env('SHOP_NAME');
+        $email = $request->input("email");
 
-        $email = $request->get("email");
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
             'Authorization' => "Bearer ". env('ATTENTIVE_API_KEY'),
@@ -33,17 +32,14 @@ class AttentiveSubController extends Controller
 
         ]);
         if ($response->successful()) {
+            return response(['success' => true, 'message' => 'Customer added to email list'], 201);
 
-            $shopifyResponse = Http::post("{$shop}/admin/api/2024-07/customers.json", ['customer' => "email:{$email}"]);
-            if ($shopifyResponse->status() === 201) {
-                return response(['success' => true, 'message' => 'Customer added to email list and created on Shopify'], 201);
-            } else {
-                return response(['error' => 'Failed to create customer on Shopify', 'details' => $shopifyResponse->body()], 500);
-            }
         } else {
 
-            dd($response->json());
-            return response($response->body());
+
+            return response(['error' => true, 'email' => $email, 'request' => $request->all(), 'message' =>
+            $response->body()],
+            $response->status());
         }
     }
 }

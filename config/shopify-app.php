@@ -381,6 +381,10 @@ return [
     */
 
     'webhooks' => [
+        [
+            'topic' => env('SHOPIFY_WEBHOOK_1_TOPIC', 'customer/created'),
+            'address' => env('SHOPIFY_WEBHOOK_1_ADDRESS', 'https://some-app.com/webhook/orders-create')
+        ]
         /*
             [
                 'topic' => env('SHOPIFY_WEBHOOK_1_TOPIC', 'ORDERS_CREATE'),
